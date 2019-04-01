@@ -17,8 +17,9 @@ namespace MLAgents
 		[MenuItem("ML-Agents/Run PreExport Method")]
 		public static void PreExport()
 		{
+			var scenePath = Environment.GetEnvironmentVariable("SCENE_PATH"); 
 			SwitchAllLearningBrainToControlMode();
-			PutSceneOnTop(SCENE_PATH);
+			PutSceneOnTop(scenePath);
 		}
 
 		protected static void PutSceneOnTop(string scenePath)
