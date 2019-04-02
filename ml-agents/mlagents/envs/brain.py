@@ -34,7 +34,7 @@ class BrainInfo:
             self.visual_observations[i].extend(other.visual_observations[i])
         self.vector_observations = np.append(self.vector_observations, other.vector_observations, axis=0)
         self.text_observations.extend(other.text_observations)
-        self.memories = self.merge_memories(self.memories, other.memories)
+        self.memories = self.merge_memories(self.memories, other.memories, self.agents, other.agents)
         self.rewards = safe_concat_lists(self.rewards, other.rewards)
         self.local_done = safe_concat_lists(self.local_done, other.local_done)
         self.max_reached = safe_concat_lists(self.max_reached, other.max_reached)
@@ -49,17 +49,20 @@ class BrainInfo:
         self.custom_observations = safe_concat_lists(self.custom_observations, other.custom_observations)
 
     @staticmethod
-    def merge_memories(m1, m2):
-        if m1 is not None and m2 is not None:
-            if m1.shape[1] > m2.shape[1]:
-                new_m1 = np.zeros((m1.shape[0], m2.shape[1]))
-                new_m1[0:m1.shape[0], 0:m1.shape[1]] = m1
-                return np.append(new_m1, m2, axis=0)
-            elif m1.shape[1] < m2.shape[1]:
-                new_m2 = np.zeros((m2.shape[0], m1.shape[1]))
-                new_m2[0:m2.shape[0], 0:m2.shape[1]] = m2
-                return np.append(m1, new_m2, axis=0)
-        return safe_concat_np_ndarray(m1, m2)
+    def merge_memories(m1, m2, agents1, agents2):
+        if len(m1) == 0 and len(m2) != 0:
+            m1 = np.zeros((len(agents1), m2.shape[1]))
+        elif len(m2) == 0 and len(m1) != 0:
+            m2 = np.zeros((len(agents2), m1.shape[1]))
+        elif m2.shape[1] > m1.shape[1]:
+            new_m1 = np.zeros((m1.shape[0], m2.shape[1]))
+            new_m1[0:m1.shape[0], 0:m1.shape[1]] = m1
+            return np.append(new_m1, m2, axis=0)
+        elif m1.shape[1] > m2.shape[1]:
+            new_m2 = np.zeros((m2.shape[0], m1.shape[1]))
+            new_m2[0:m2.shape[0], 0:m2.shape[1]] = m2
+            return np.append(m1, new_m2, axis=0)
+        return np.append(m1, m2, axis=0)
 
     @staticmethod
     def process_pixels(image_bytes, gray_scale):
@@ -94,7 +97,7 @@ class BrainInfo:
         else:
             memory_size = max([len(x.memories) for x in agent_info_list])
         if memory_size == 0:
-            memory = None
+            memory = np.zeros((0, 0))
         else:
             [x.memories.extend([0] * (memory_size - len(x.memories))) for x in agent_info_list]
             memory = np.array([list(x.memories) for x in agent_info_list])

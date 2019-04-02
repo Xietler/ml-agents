@@ -70,10 +70,10 @@ class SubprocessEnvironmentTest(unittest.TestCase):
 
     def test_step_await_combines_brain_info(self):
         all_brain_info_env0 = {
-            'MockBrain': BrainInfo([], [[1.0, 2.0], [1.0, 2.0]], [], agents=[1, 2])
+            'MockBrain': BrainInfo([], [[1.0, 2.0], [1.0, 2.0]], [], agents=[1, 2], memory=np.zeros((0,0)))
         }
         all_brain_info_env1 = {
-            'MockBrain': BrainInfo([], [[3.0, 4.0]], [], agents=[3])
+            'MockBrain': BrainInfo([], [[3.0, 4.0]], [], agents=[3], memory=np.zeros((0,0)))
         }
         env_worker_0 = MockEnvWorker(0)
         env_worker_0.recv.return_value = EnvironmentResponse('step', 0, all_brain_info_env0)

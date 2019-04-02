@@ -82,6 +82,7 @@ class UnityEnvironment(BaseUnityEnvironment):
         # TODO : think of a better way to expose the academyParameters
         self._unity_version = aca_params.version
         if self._unity_version != self._version_:
+            self._close()
             raise UnityEnvironmentException(
                 "The API number is not compatible between Unity and python. Python API : {0}, Unity API : "
                 "{1}.\nPlease go to https://github.com/Unity-Technologies/ml-agents to download the latest version "

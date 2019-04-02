@@ -137,7 +137,7 @@ class PPOTrainer(Trainer):
             vector_observations.append(agent_brain_info.vector_observations[agent_index])
             text_observations.append(agent_brain_info.text_observations[agent_index])
             if self.policy.use_recurrent:
-                if len(agent_brain_info.memories > 0):
+                if len(agent_brain_info.memories) > 0:
                     memories.append(agent_brain_info.memories[agent_index])
                 else:
                     memories.append(self.policy.make_empty_memory(1))
