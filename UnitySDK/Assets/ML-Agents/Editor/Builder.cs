@@ -19,7 +19,7 @@ namespace MLAgents
 		{
 			var scenePath = Environment.GetEnvironmentVariable("SCENE_PATH"); 
 			SwitchAllLearningBrainToControlMode();
-			PutSceneToBuild(scenePath);
+//			PutSceneToBuild(scenePath);
 		}
 
 		protected static void PutSceneToBuild(string scenePath)
