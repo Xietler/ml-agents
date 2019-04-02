@@ -19,33 +19,23 @@ namespace MLAgents
 		{
 			var scenePath = Environment.GetEnvironmentVariable("SCENE_PATH"); 
 			SwitchAllLearningBrainToControlMode();
-			PutSceneOnTop(scenePath);
+			PutSceneToBuild(scenePath);
 		}
 
-		protected static void PutSceneOnTop(string scenePath)
+		protected static void PutSceneToBuild(string scenePath)
 		{
-			EditorBuildSettingsScene targetScene = null;
-			
 			List<EditorBuildSettingsScene> scenes = new List<EditorBuildSettingsScene>();
 
-			// Find the target scenes to be inserted as the first scene, all the rest to the list
-			for (int i = 0; i < EditorBuildSettings.scenes.Length; i++)
+			EditorBuildSettingsScene targetScene = new EditorBuildSettingsScene(scenePath, true);
+			
+			if (!File.Exists(scenePath))
 			{
-				if (EditorBuildSettings.scenes[i].path == scenePath)
-				{
-					targetScene = EditorBuildSettings.scenes[i];
-				}
-				else
-				{
-					scenes.Add(EditorBuildSettings.scenes[i]);
-				}
+				throw new Exception("The Specified scenePath " + scenePath + " does not exist");
 			}
 			
-			scenes.Insert(0, targetScene);
-			
+			scenes.Add(targetScene);
+
 			EditorBuildSettings.scenes = scenes.ToArray();
-			
-			Debug.Log("Switched to scene " + targetScene.path + "as the first in build settings");
 		}
 		
 		[MenuItem("ML-Agents/Switch All Learning Brain To Control Mode")]
